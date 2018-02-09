@@ -7,7 +7,7 @@
 (defn joda-time->intdate
   [d]
   {:pre [(joda-time? d)]}
-  (int (/ (to-long d) 1000)))
+  (long (/ (to-long d) 1000)))
 
 
 (defn intdate->joda-time
