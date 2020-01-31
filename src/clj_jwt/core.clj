@@ -8,6 +8,8 @@
     [clojure.string      :as str]))
 
 (def ^:private DEFAULT_SIGNATURE_ALGORITHM :HS256)
+(def ^:private DEFAULT_KID nil)
+
 (def ^:private map->encoded-json (comp url-safe-encode-str
                                        #(json/write-str % :key-fn write-key)))
 (def ^:private encoded-json->map (comp #(json/read-str % :key-fn read-key)
@@ -48,18 +50,22 @@
 (defprotocol JsonWebSignature
   "Protocol for JonWebSignature"
   (set-alg [this alg] "Set algorithm name to JWS Header Parameter")
-  (sign    [this key] [this alg key] "Set signature to this token")
+  (set-kid [this kid] "Set Key ID to JWS Header Parameter")
+  (sign    [this key] [this alg key] [this alg key kid] "Set signature to this token")
   (verify  [this] [this key] [this algorithm key] "Verify this token"))
 
 (extend-protocol JsonWebSignature
   JWT
   (set-alg [this alg]
     (assoc-in this [:header :alg] (name alg)))
-
+  (set-kid [this kid]
+    (assoc-in this [:header :kid] kid))
   (sign
-    ([this key] (sign this DEFAULT_SIGNATURE_ALGORITHM key))
-    ([this alg key]
-     (let [this*   (set-alg this alg)
+    ([this key] (sign this DEFAULT_SIGNATURE_ALGORITHM key DEFAULT_KID))
+    ([this alg key] (sign this alg key DEFAULT_KID))
+    ([this alg key kid]
+     (let [this* (cond-> (set-alg this alg)
+                   (some? kid) (set-kid kid))
            sign-fn (get-signature-fn alg)
            data    (str (encoded-header this*) "." (encoded-claims this*))]
        (assoc this* :signature (sign-fn key data) :encoded-data data))))
