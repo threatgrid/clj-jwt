@@ -1,17 +1,8 @@
-> This project has two homes.
-> It is ok to work in github, still, for a better decentralized web
-> please consider contributing (issues, PR, etc...) throught:
->
-> https://gitlab.esy.fun/yogsototh/clj-jwt
-
----
-
-
 # clj-jwt
 
-[![clj-jwt](https://img.shields.io/clojars/v/yogsototh/clj-jwt.svg)](https://clojars.org/yogsototh/clj-jwt)
+[![clj-jwt](https://img.shields.io/clojars/v/threatgrid/clj-jwt.svg)](https://clojars.org/threatgrid/clj-jwt)
 [![Dependency Status](https://www.versioneye.com/user/projects/53462a37e97a46e756000308/badge.png)](https://www.versioneye.com/user/projects/53462a37e97a46e756000308)
-[![Build Status](https://travis-ci.org/yogsototh/clj-jwt.png?branch=master)](https://travis-ci.org/liquidz/clj-jwt)
+[![Build Status](https://travis-ci.org/threatgrid/clj-jwt.png?branch=master)](https://travis-ci.org/threatgrid/clj-jwt)
 
 A Clojure library for JSON Web Token(JWT) [draft-ietf-oauth-json-web-token-19](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-19)
 
