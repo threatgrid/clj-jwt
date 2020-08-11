@@ -52,7 +52,7 @@
 (defn url-safe-decode
   ^bytes
   [^String s]
-  (-> (case (mod (count s) 4)
+  (-> (condp = (mod (.length s) 4)
         2 (str s "==")
         3 (str s "=")
         s)
