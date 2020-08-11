@@ -4,16 +4,24 @@
     [clj-jwt.sign        :refer [get-signature-fn get-verify-fn supported-algorithm?]]
     [clj-jwt.intdate     :refer [joda-time->intdate]]
     [clj-jwt.json-key-fn :refer [write-key read-key]]
-    [clojure.data.json   :as json]
-    [clojure.string      :as str]))
+    [clojure.string      :as str]
+    [jsonista.core       :as jsonista]))
 
 (def ^:private DEFAULT_SIGNATURE_ALGORITHM :HS256)
 (def ^:private DEFAULT_KID nil)
 
+(def ^:private jsonista-mapper
+  (jsonista/object-mapper {:encode-key-fn write-key
+                           :decode-key-fn read-key}))
+
 (def ^:private map->encoded-json (comp url-safe-encode-str
-                                       #(json/write-str % :key-fn write-key)))
-(def ^:private encoded-json->map (comp #(json/read-str % :key-fn read-key)
+                                       (fn [m]
+                                         (jsonista/write-value-as-string m jsonista-mapper))))
+
+(def ^:private encoded-json->map (comp (fn [^String s]
+                                         (jsonista/read-value s jsonista-mapper))
                                        url-safe-decode-str))
+
 (defn- update-map [m k f] (if (contains? m k) (update-in m [k] f) m))
 
 (defrecord JWT [header claims signature encoded-data])
