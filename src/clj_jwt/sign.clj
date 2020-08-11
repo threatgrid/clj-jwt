@@ -1,12 +1,14 @@
 (ns clj-jwt.sign
   (:require
-    [clj-jwt.base64  :refer [url-safe-encode-str url-safe-decode]]
-    [crypto.equality :refer [eq?]]))
+   [clj-jwt.base64  :refer [url-safe-encode-str url-safe-decode]]
+   [crypto.equality :refer [eq?]])
+  (:import
+   (java.security PublicKey PrivateKey)))
 
 ; HMAC
 (defn- hmac-sign
   "Function to sign data with HMAC algorithm."
-  [alg key body & {:keys [charset] :or {charset "UTF-8"}}]
+  [alg ^String key ^String body & {:keys [^String charset] :or {charset "UTF-8"}}]
   (let [hmac-key (javax.crypto.spec.SecretKeySpec. (.getBytes key charset) alg)
         hmac     (doto (javax.crypto.Mac/getInstance alg)
                        (.init hmac-key))]
@@ -14,13 +16,13 @@
 
 (defn- hmac-verify
   "Function to verify data and signature with HMAC algorithm."
-  [alg key body signature & {:keys [charset] :or {charset "UTF-8"}}]
+  [alg ^String key ^String body signature & {:keys [^String charset] :or {charset "UTF-8"}}]
   (eq? signature (hmac-sign alg key body :charset charset)))
 
 ; RSA
 (defn- rsa-sign
   "Function to sign data with RSA algorithm."
-  [alg key body & {:keys [charset] :or {charset "UTF-8"}}]
+  [alg ^PrivateKey key ^String body & {:keys [^String charset] :or {charset "UTF-8"}}]
   (let [sig (doto (java.security.Signature/getInstance alg)
                   (.initSign key (java.security.SecureRandom.))
                   (.update (.getBytes body charset)))]
@@ -28,7 +30,7 @@
 
 (defn- rsa-verify
   "Function to verify data and signature with RSA algorithm."
-  [alg key body signature & {:keys [charset] :or {charset "UTF-8"}}]
+  [alg ^PublicKey key ^String body signature & {:keys [^String charset] :or {charset "UTF-8"}}]
   (let [sig (doto (java.security.Signature/getInstance alg)
                   (.initVerify key)
                   (.update (.getBytes body charset)))]
@@ -37,18 +39,18 @@
 
 ; ECDSA
 (defn- ec-sign
-  [alg key body & {:keys [charset] :or {charset "UTF-8"}}]
+  [alg ^PrivateKey key ^String body & {:keys [^String charset] :or {charset "UTF-8"}}]
   (let [sig (doto (java.security.Signature/getInstance alg)
                   (.initSign key)
                   (.update (.getBytes body charset)))]
-    (url-safe-encode-str (.sign sig))))
-
 (defn ec-verify
   [alg key body signature & {:keys [charset] :or {charset "UTF-8"}}]
   (let [sig (doto (java.security.Signature/getInstance alg)
                   (.initSign key)
                   (.update (.getBytes body charset)))]
     (.verify sig (url-safe-decode signature))))
+
+    (url-safe-encode-str (.sign sig))))
 
 (def ^:private signature-fns
   {:HS256 (partial hmac-sign "HmacSHA256")
