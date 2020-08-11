@@ -43,13 +43,6 @@
   (let [sig (doto (java.security.Signature/getInstance alg)
                   (.initSign key)
                   (.update (.getBytes body charset)))]
-(defn ec-verify
-  [alg key body signature & {:keys [charset] :or {charset "UTF-8"}}]
-  (let [sig (doto (java.security.Signature/getInstance alg)
-                  (.initSign key)
-                  (.update (.getBytes body charset)))]
-    (.verify sig (url-safe-decode signature))))
-
     (url-safe-encode-str (.sign sig))))
 
 (def ^:private signature-fns
