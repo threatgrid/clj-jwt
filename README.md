@@ -120,5 +120,6 @@ You can specify algorithm name (OPTIONAL) for more secure verification.
 ## License
 
 Copyright © 2015 [uochan](http://twitter.com/uochan)
+Copyright © 2018- Cisco
 
 Distributed under the Eclipse Public License, the same as Clojure.
