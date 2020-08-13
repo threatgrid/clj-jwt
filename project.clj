@@ -1,4 +1,4 @@
-(defproject threatgrid/clj-jwt "0.3.3-jsonista-alpha"
+(defproject threatgrid/clj-jwt "0.4.0"
   :description  "Clojure library for JSON Web Token(JWT)"
   :url          "https://github.com/threatgrid/clj-jwt"
   :pedantic?    :abort
