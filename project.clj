@@ -12,4 +12,6 @@
                  [metosin/jsonista "0.2.6"]]
   :profiles {:dev {:dependencies [[midje "1.9.9"]]}}
   :global-vars {*warn-on-reflection* true}
-  :plugins  [[lein-midje "3.2.1"]])
+  :plugins  [[lein-midje "3.2.1"]]
+  :deploy-repositories [["releases" {:url "https://clojars.org/repo" :creds :gpg}]
+                        ["snapshots" {:url "https://clojars.org/repo" :creds :gpg}]])
