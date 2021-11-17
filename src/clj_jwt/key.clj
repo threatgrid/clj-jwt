@@ -9,6 +9,9 @@
     [org.bouncycastle.cert X509CertificateHolder]
     [java.io StringReader]))
 
+;; Mandatory to initialize bouncy castle provider
+(require 'clj-jwt.bouncy-castle-provider)
+
 (defprotocol GetPrivateKey
   (-get-private-key [key-info password]))
 
