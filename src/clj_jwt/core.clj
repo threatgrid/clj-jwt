@@ -2,7 +2,7 @@
   (:require
     [clj-jwt.base64      :refer [url-safe-encode-str url-safe-decode-str]]
     [clj-jwt.sign        :refer [get-signature-fn get-verify-fn supported-algorithm?]]
-    [clj-jwt.intdate     :refer [joda-time->intdate]]
+    [clj-jwt.intdate     :refer [ensure-intdate]]
     [clj-jwt.json-key-fn :refer [write-key read-key]]
     [clojure.string      :as str]
     [jsonista.core       :as jsonista]))
@@ -39,7 +39,7 @@
 (extend-protocol JsonWebToken
   JWT
   (init [this claims]
-    (let [claims (reduce #(update-map % %2 joda-time->intdate) claims [:exp :nbf :iat])]
+    (let [claims (reduce #(update-map % %2 ensure-intdate) claims [:exp :nbf :iat])]
       (assoc this :header {:alg "none" :typ "JWT"} :claims claims :signature "")))
 
   (encoded-header [this]

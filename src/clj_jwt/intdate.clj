@@ -2,7 +2,12 @@
   (:require
     [clj-time.coerce :refer [to-long from-long]]))
 
+
+
 (defn- joda-time? [x] (= org.joda.time.DateTime (type x)))
+
+
+
 
 (defn joda-time->intdate
   [d]
@@ -14,3 +19,11 @@
   [i]
   {:pre [(integer? i) (pos? i)]}
   (from-long (* i 1000)))
+
+
+(defn ensure-intdate [x]
+  (cond
+    (int? x)
+    x
+    (joda-time? x)
+    (joda-time->intdate x)))
