@@ -1,4 +1,4 @@
-(defproject threatgrid/clj-jwt "0.5.1"
+(defproject threatgrid/clj-jwt "0.5.2-SNAPSHOT"
   :description  "Clojure library for JSON Web Token(JWT)"
   :url          "https://github.com/threatgrid/clj-jwt"
   :pedantic?    :abort
