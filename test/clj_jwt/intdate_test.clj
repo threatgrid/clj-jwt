@@ -15,3 +15,9 @@
     (intdate->joda-time i)   => d
     (intdate->joda-time nil) => (throws AssertionError)))
 
+
+(fact "ensure->intdate should work fine."
+  (let [d (date-time 2000 1 2 3 4 5)]
+    (ensure-intdate d)   => 946782245
+    (ensure-intdate 946782245) => 946782245))
+
